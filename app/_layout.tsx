@@ -8,6 +8,10 @@ import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
+import { PaperProvider } from "react-native-paper";
+import { Provider as StoreProvider } from "react-redux";
+import { store } from "../store";
+import { Provider } from "../contexts/auth";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -23,6 +27,11 @@ export default function RootLayout() {
   const [loaded, error] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     ...FontAwesome.font,
+    PoppinsRegular: require("../assets/fonts/Poppins/Poppins-Regular.ttf"),
+    PoppinsBold: require("../assets/fonts/Poppins/Poppins-Bold.ttf"),
+    PoppinsSemiBold: require("../assets/fonts/Poppins/Poppins-SemiBold.ttf"),
+    PoppinsMedium: require("../assets/fonts/Poppins/Poppins-Medium.ttf"),
+    PoppinsLight: require("../assets/fonts/Poppins/Poppins-Light.ttf"),
   });
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
@@ -44,13 +53,19 @@ function RootLayoutNav() {
 
   return (
     <>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-        </Stack>
-      </ThemeProvider>
+      <Provider>
+        <StoreProvider store={store}>
+          <ThemeProvider
+            value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+          >
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+              <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+            </Stack>
+          </ThemeProvider>
+        </StoreProvider>
+      </Provider>
     </>
   );
 }
