@@ -12,6 +12,7 @@ import { PaperProvider } from "react-native-paper";
 import { Provider as StoreProvider } from "react-redux";
 import { store } from "../store";
 import { Provider } from "../contexts/auth";
+import { MD3LightTheme as PaperDefaultTheme } from "react-native-paper";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -21,6 +22,15 @@ export {
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
   initialRouteName: "(tabs)",
+};
+
+const theme = {
+  ...PaperDefaultTheme,
+  colors: {
+    ...PaperDefaultTheme.colors,
+    primary: "tomato",
+    secondary: "yellow",
+  },
 };
 
 export default function RootLayout() {
@@ -55,15 +65,20 @@ function RootLayoutNav() {
     <>
       <Provider>
         <StoreProvider store={store}>
-          <ThemeProvider
-            value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-          >
-            <Stack>
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-              <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-            </Stack>
-          </ThemeProvider>
+          <PaperProvider theme={theme}>
+            <ThemeProvider
+              value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+            >
+              <Stack>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="modal"
+                  options={{ presentation: "modal" }}
+                />
+              </Stack>
+            </ThemeProvider>
+          </PaperProvider>
         </StoreProvider>
       </Provider>
     </>
